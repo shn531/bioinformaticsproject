@@ -1,5 +1,5 @@
 # Main Project에 관한 Readme : Figure5A
-## Main Source
+## Main Text
 1. 기존에 제공된 예제 1-3의 데이터의 형식에 따르다.
 2. Data의 출처는 github의 hyeshik/colab-biolab.git에 있는 데이터를 불러와서 사용한다.
 ```java
@@ -42,6 +42,7 @@ Geneid.to_csv('Geneid.txt', index = False)
 ```
 8. panther를 통해 GO term과 Geneid를 합쳐준 후 txt file로 전송한 후 목록을 만들었다.   
 * panther link : <http://pantherdb.org>
+* Pantherorg 사용방법은 해당 readme에 설명해 놓았다. - [Panther](https://github.com/shn531/bioinformaticsproject/blob/main/Mainproject/Panther.md)
 ```java
 panther = pd.read_csv('pantherGeneList.txt', sep='\t', names = ["1", "2", "3", "4", "5", "6"])
 ```
