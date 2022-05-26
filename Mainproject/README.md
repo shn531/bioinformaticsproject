@@ -46,4 +46,27 @@ Geneid.to_csv('Geneid.txt', index = False)
 ```java
 panther = pd.read_csv('pantherGeneList.txt', sep='\t', names = ["1", "2", "3", "4", "5", "6"])
 ```
-## 사용된
+9. Geneid는 여러가지 섞여있기 때문에, split을 통해 MGI 번호만 남겨놓고 지우기로 하였다.
+* 이부분 부터는 수정이 더 필요함!
+```java
+goandgene = panther['2'].str.split('|', expand = True)
+```
+
+## 사용된 데이터의 출처
+1. LIN28a paper
+2. LIN28a paper Figure 5A
+3. LIN28 Table5 :
+4. LIN28a Table6 :
+
+## 사용된 CODE 출처
+1. SCATTER PLOT 정보 :    
+ * [SCATTER DEMO](https://matplotlib.org/3.5.0/gallery/lines_bars_and_markers/scatter_demo2.html#sphx-glr-gallery-lines-bars-and-markers-scatter-demo2-py)     
+ * [SCATTER PLOT MARKER](https://www.pythonprogramming.in/adjust-marker-sizes-and-colors-in-scatter-plot.html)
+2. DataFrame 수정 정보 :     
+ * [Dataframe1](https://firedino.tistory.com/49)     
+ * [Dataframe2](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.reset_index.html)      
+ * [Dataframe3](https://mizykk.tistory.com/126)    
+3. GO data 수정 정보 :     
+ * [GSEApy_Biomart](https://gseapy.readthedocs.io/en/latest/gseapy_example.html)     
+4. MATPLOTLIB 수정 정보 :     
+ * [Subplot](https://www.delftstack.com/ko/howto/matplotlib/how-to-improve-subplot-size-or-spacing-with-many-subplots-in-matplotlib/)
