@@ -40,17 +40,44 @@ Geneid = cnts_1['Geneid']
 Geneid_noindex = Geneid.reset_index(drop = True)
 Geneid.to_csv('Geneid.txt', index = False)
 ```
-8. panther를 통해 GO term과 Geneid를 합쳐준 후 txt file로 전송한 후 목록을 만들었다.   
+8. 이후 GO term 분석방법을 위해서 여러가지 시도를 해 보았는데, 각각의 방법들은 아래 주석에 달아놨다. 
+8-1. Panther를 통해 Go term과 Geneid를 합쳐준 후 text file로 전송한 후 목록을 만드는 방법
 * panther link : <http://pantherdb.org>
 * Pantherorg 사용방법은 해당 readme에 설명해 놓았다. - [Panther](https://github.com/shn531/bioinformaticsproject/blob/main/Mainproject/Panther.md)
 ```java
 panther = pd.read_csv('pantherGeneList.txt', sep='\t', names = ["1", "2", "3", "4", "5", "6"])
 ```
-9. Geneid는 여러가지 섞여있기 때문에, split을 통해 MGI 번호만 남겨놓고 지우기로 하였다.
+* Geneid는 여러가지 섞여있기 때문에, split을 통해 MGI 번호만 남겨놓고 지우기로 하였다.
 * 이부분 부터는 수정이 더 필요함!
 ```java
 goandgene = panther['2'].str.split('|', expand = True)
 ```
+8-2. Biomart emsembl을 통해 Gene에 해당하는 GOTERM을 1:1로 정리한 이후 위에 데이터와 합쳐주는 방법
+*biomart link : <https://www.ensembl.org/biomart/martview/3060b118360cd8fc256f91b8247b41bf>
+*Biomart emsembl의 사용 방법은 해당 readme에 설명해 놓았다.  - [Biomart](https://github.com/shn531/bioinformaticsproject/blob/main/Mainproject/Biomart.md)
+*Biomart를 통한 gene, go list는 첨부해 놓았으며, 이러한 list를 가지고 dataset을 만들기로함.
+
+9. Biomart 방법을 따라 Gene stable ID(GENE ID), GO term accession과 GO term name을 불러온 후 pandas로 dataframe 형성한다.
+```java
+goanden = pd.read_csv('goanden.txt', sep=',')
+```
+
+10. 불러온 정보들을 위의 cnt data와 합쳐주기 위해서 column 이름을 변경하고 Geneid를 공통분모로 합쳐준다.
+```java
+goanden.rename(columns = {'Gene stable ID':'Geneid'},inplace=True)
+merge = pd.merge(cnts_1, goanden, how='inner', on=None)
+```
+
+11. DATA 준비는 완료되었으며, 그 이후 cbook을 이용해 scatter plot을 만든다. 우선 필요한 프로그램들을 불러온다.
+```java
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.cbook as cbook
+```
+
+
+
+
 
 ## 사용된 데이터의 출처
 1. LIN28a paper
