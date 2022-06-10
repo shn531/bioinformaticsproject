@@ -68,16 +68,60 @@ goanden.rename(columns = {'Gene stable ID':'Geneid'},inplace=True)
 merge = pd.merge(cnts_1, goanden, how='inner', on=None)
 ```
 
-11. DATA 준비는 완료되었으며, 그 이후 cbook을 이용해 scatter plot을 만든다. 우선 필요한 프로그램들을 불러온다.
+11. Gene을 GO 별로 묶은 후 count로 묶어준다.
+```java
+geneexport = pd.read_csv('geneexport.txt, sep = ',')
+genesize = geneexport.groupy([GO term accession, GO stable ID].count().reset_index(name='count')
+```
+
+12. mmc6 (supplement 에 있는 mmc6 GO term 을 가져와서 이름을 위에 genesize 와 맞춰준 후 최종적으로 합쳐준다.
+```java
+mmc6 = pd.read_csv('mm6.txt', index_col = False, sep="\t")
+mmc6.rename(columns = {'GO accession':'GO term accession'},inplace=True)
+mergefinal = pd.merge(mmc6, genesize, how='inner', on=None)
+mergefinal.rename(columns = {'RPF\r\nRibosome density change (log2)':'Rdenlogchange'},inplace=True)
+```
+
+13. MannWhitney U test 실행한다
+```java
+import scipy.stats as stats
+stats.mannwhitneyu(x = mergefinal['CLIP-seq log2 enrichment'], y = mergefinal['Rdenlogchange'])
+```
+
+
+14. DATA 준비는 완료되었으며, 그 이후 cbook을 이용해 scatter plot을 만든다. 우선 필요한 프로그램들을 불러온다.
+**그전에 FDR <0.05 값들만 excel을 통해서 추려 줬다.
 ```java
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cbook as cbook
+import matplotlib as mpl
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 ```
 
+15. 최종적으로 그래프를 만들어준다.
+```java
+volume = mergefinaldrop['count']
+color = mergefinaldrop['RPF\r\nFDR']
+
+fig, ax = plt.subplots(figsize = (15,8))
+figure = ax.scatter(mergefinaldrop['CLIP-seq log2 enrichment'], mergefinaldrop['Rdenlogchange'], c = color, cmap = "YlOrRd", s = volume*0.5, alpha = 0.9)
+
+ax.set_xlabel('Enrichment level of LIN28A-bount CLIP tags(log2)')
+ax.set_ylabel('Ribosome density change upon Lin28a knockdown(log2)')
+
+ax.grid(True)
+#colorlabel
+cbar = plt.colorbar(figure, ticks = [np.arange(0, 10e-20, 10e-2)])
+cbar.set_label('Term-specific enrichment confidence(false dicovery rate')
+cbar.set_ticks(np.arange(10e-20, 1, 10e-2))
+
+#annotation
+ax.annotate('cytoplasm', xy = (-0.25, 0.53), xycoords='data', xytext = (-60, 50), size = 10, textcoords = 'offset points', bbox=dict(boxstyle = "round", fc = "0.8"), arrowprops = dict(arrowstyle = "->"))
 
 
-
+plt.show()
+```
 
 ## 사용된 데이터의 출처
 1. LIN28a paper
